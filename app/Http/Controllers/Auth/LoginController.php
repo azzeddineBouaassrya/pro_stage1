@@ -17,28 +17,28 @@ class LoginController extends Controller
     // Traiter la connexion
     public function login(Request $request)
     {
+        // Valider les données du formulaire
         $request->validate([
             'name' => 'required|string',
             'password' => 'required|string',
-            'role' => 'required|in:admin,user', // Vérifier que le rôle est valide
         ]);
 
         // Tenter de connecter l'utilisateur
-        if (Auth::attempt(['name' => $request->name, 'password' => $request->password, 'role' => $request->role])) {
+        if (Auth::attempt(['name' => $request->name, 'password' => $request->password])) {
             $request->session()->regenerate();
 
             // Rediriger en fonction du rôle
             if (Auth::user()->role === 'admin') {
-                return redirect()->intended('/admin/dashboard'); // Rediriger vers le tableau de bord admin
+                return redirect()->intended('/admin/dashboard')->with('success', 'Connexion réussie en tant qu\'administrateur.');
             } else {
-                return redirect()->intended('/formulaire'); // Rediriger vers la page de calcul
+                return redirect()->intended('/formulaire')->with('success', 'Connexion réussie.');
             }
         }
 
         // Si l'authentification échoue, rediriger avec un message d'erreur
         return back()->withErrors([
-            'name' => 'Les identifiants sont incorrects.',
-        ]);
+            'name' => 'Nom d\'utilisateur ou mot de passe incorrect.',
+        ])->withInput($request->only('name'));
     }
 
     // Déconnexion
@@ -47,6 +47,6 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+        return redirect('/')->with('success', 'Déconnexion réussie.');
     }
 }

@@ -27,6 +27,11 @@ class AdminUserSeeder extends Seeder
             'password' => Hash::make('user123'), // Mot de passe haché
             'role' => 'user',
         ]);
+        User::create([
+            'name' => 'User2',
+            'password' => Hash::make('user123'), // Mot de passe haché
+            'role' => 'user',
+        ]);
     
     }
 }

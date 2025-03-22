@@ -19,58 +19,115 @@
             background-color: #f8f9fa;
             border-radius: 5px;
         }
+        .result p {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Formulaire de Calcul</h1>
+        <h1 class="text-center mb-4">Formulaire de Calcul</h1>
+
+        <!-- Formulaire de calcul -->
         <form action="{{ route('formulaire.calculer') }}" method="POST">
             @csrf
+
+            <!-- Longueur de ligne -->
             <div class="form-group">
                 <label for="longueur">Longueur de ligne (m)</label>
-                <input type="number" step="0.01" class="form-control" id="longueur" name="longueur" required>
+                <input type="number" step="0.01" class="form-control @error('longueur') is-invalid @enderror" id="longueur" name="longueur" value="{{ old('longueur') }}" required>
+                @error('longueur')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
+
+            <!-- Largeur de ligne -->
             <div class="form-group">
                 <label for="largeur">Largeur de ligne (m)</label>
-                <input type="number" step="0.01" class="form-control" id="largeur" name="largeur" required>
+                <input type="number" step="0.01" class="form-control @error('largeur') is-invalid @enderror" id="largeur" name="largeur" value="{{ old('largeur') }}" required>
+                @error('largeur')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
+
+            <!-- Nombre de lignes -->
             <div class="form-group">
                 <label for="nombre_lignes">Nombre de lignes</label>
-                <input type="number" class="form-control" id="nombre_lignes" name="nombre_lignes" required>
+                <input type="number" class="form-control @error('nombre_lignes') is-invalid @enderror" id="nombre_lignes" name="nombre_lignes" value="{{ old('nombre_lignes') }}" required>
+                @error('nombre_lignes')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
+
+            <!-- Quantité de produit (g/m²) -->
             <div class="form-group">
                 <label for="quantite_produit_g">Quantité de produit (g/m²)</label>
-                <input type="number" step="0.01" class="form-control" id="quantite_produit_g" name="quantite_produit_g" required>
+                <input type="number" step="0.01" class="form-control @error('quantite_produit_g') is-invalid @enderror" id="quantite_produit_g" name="quantite_produit_g" value="{{ old('quantite_produit_g') }}" required>
+                @error('quantite_produit_g')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
+
+            <!-- Quantité de produit (cc/m²) -->
             <div class="form-group">
                 <label for="quantite_produit_cc">Quantité de produit (cc/m²)</label>
-                <input type="number" step="0.01" class="form-control" id="quantite_produit_cc" name="quantite_produit_cc" required>
+                <input type="number" step="0.01" class="form-control @error('quantite_produit_cc') is-invalid @enderror" id="quantite_produit_cc" name="quantite_produit_cc" value="{{ old('quantite_produit_cc') }}" required>
+                @error('quantite_produit_cc')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
+
+            <!-- Quantité d'eau (litres/m²) -->
             <div class="form-group">
                 <label for="quantite_eau_litres_m2">Quantité d'eau (litres/m²)</label>
-                <input type="number" step="0.01" class="form-control" id="quantite_eau_litres_m2" name="quantite_eau_litres_m2" required>
+                <input type="number" step="0.01" class="form-control @error('quantite_eau_litres_m2') is-invalid @enderror" id="quantite_eau_litres_m2" name="quantite_eau_litres_m2" value="{{ old('quantite_eau_litres_m2') }}" required>
+                @error('quantite_eau_litres_m2')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
+
+            <!-- Débit d'eau (litres/heure) -->
             <div class="form-group">
                 <label for="debit_eau_litres_heure">Débit d'eau (litres/heure)</label>
-                <input type="number" step="0.01" class="form-control" id="debit_eau_litres_heure" name="debit_eau_litres_heure" required>
+                <input type="number" step="0.01" class="form-control @error('debit_eau_litres_heure') is-invalid @enderror" id="debit_eau_litres_heure" name="debit_eau_litres_heure" value="{{ old('debit_eau_litres_heure') }}" required>
+                @error('debit_eau_litres_heure')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
             </div>
-            <button type="submit" class="btn btn-primary">Calculer</button>
+
+            <!-- Boutons -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Calculer</button>
+                <button type="reset" class="btn btn-secondary">Réinitialiser</button>
+            </div>
         </form>
-    </div>
-    <div>
+
+        <!-- Affichage des résultats -->
         @if(isset($results))
             <div class="result">
                 <h2>Résultats</h2>
-                <p>Surface : {{ $results['surface'] }} m²</p>
-                <p>Quantité totale de produit (litres) : {{ $results['quantite_totale_litres'] }}</p>
-                <p>Quantité totale de produit (kg) : {{ $results['quantite_totale_kg'] }}</p>
-                <p>Quantité d'eau totale (litres) : {{ $results['quantite_eau_totale_litres'] }}</p>
-                <p>Débit d'eau (litres/minute) : {{ $results['debit_eau_litres_minute'] }}</p>
-                <p>Période d'application (heures) : {{ $results['periode_application_heures'] }}</p>
-                <p>Période d'application (minutes) : {{ $results['periode_application_minutes'] }}</p>
+                <p><strong>Surface :</strong> {{ number_format($results['surface'], 2) }} m²</p>
+                <p><strong>Quantité totale de produit (litres) :</strong> {{ number_format($results['quantite_totale_litres'], 2) }}</p>
+                <p><strong>Quantité totale de produit (kg) :</strong> {{ number_format($results['quantite_totale_kg'], 2) }}</p>
+                <p><strong>Quantité d'eau totale (litres) :</strong> {{ number_format($results['quantite_eau_totale_litres'], 2) }}</p>
+                <p><strong>Débit d'eau (litres/minute) :</strong> {{ number_format($results['debit_eau_litres_minute'], 2) }}</p>
+                <p><strong>Période d'application (heures) :</strong> {{ number_format($results['periode_application_heures'], 2) }}</p>
+                <p><strong>Période d'application (minutes) :</strong> {{ number_format($results['periode_application_minutes'], 2) }}</p>
+                <p><strong>Rinçage (eau) :</strong> {{ number_format($results['rinçage_eau'], 2) }} litres</p>
+                <p><strong>Durée de rinçage :</strong> {{ number_format($results['rinçage_duree'], 2) }} minutes</p>
+                <p><strong>Contrôle de la concentration :</strong> {{ number_format($results['controle_concentration'], 2) }} %</p>
             </div>
-            <a href="{{ route('formulaire.export') }}" class="btn btn-success">Exporter en Word</a>
+
+            <!-- Bouton d'exportation -->
+            <div class="text-center mt-3">
+                <a href="{{ route('formulaire.export') }}" class="btn btn-success">
+                    <i class="bi bi-file-earmark-word"></i> Exporter en Word
+                </a>
+            </div>
         @endif
     </div>
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 </body>
 </html>

@@ -8,8 +8,25 @@ use PhpOffice\PhpWord\IOFactory;
 
 class FormulaireController extends Controller
 {
+    /**
+     * Affiche le formulaire de calcul.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function index()
+    {
+        return view('forme.formulaire');
+    }
+
+    /**
+     * Traite les données du formulaire et effectue les calculs.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
     public function calculer(Request $request)
     {
+        // Validation des données du formulaire
         $request->validate([
             'longueur' => 'required|numeric',
             'largeur' => 'required|numeric',
@@ -29,7 +46,12 @@ class FormulaireController extends Controller
         $periode_application_heures = $quantite_eau_totale_litres / $request->debit_eau_litres_heure;
         $periode_application_minutes = $periode_application_heures * 60;
 
-        // Résultats
+        // Calculs supplémentaires
+        $rinçage_eau = 3.5 * $surface; // Quantité d'eau de rinçage
+        $rinçage_duree = $rinçage_eau / $debit_eau_litres_minute; // Durée de rinçage
+        $controle_concentration = ($quantite_totale_litres / $quantite_eau_totale_litres) * 1000; // Contrôle de la concentration
+
+        // Stocker les résultats dans un tableau
         $results = [
             'surface' => $surface,
             'quantite_totale_litres' => $quantite_totale_litres,
@@ -38,20 +60,24 @@ class FormulaireController extends Controller
             'debit_eau_litres_minute' => $debit_eau_litres_minute,
             'periode_application_heures' => $periode_application_heures,
             'periode_application_minutes' => $periode_application_minutes,
+            'rinçage_eau' => $rinçage_eau, // Ajouté
+            'rinçage_duree' => $rinçage_duree, // Ajouté
+            'controle_concentration' => $controle_concentration, // Ajouté
         ];
 
-        // Stocker les résultats dans la session
+        // Stocker les résultats dans la session pour une utilisation ultérieure
         $request->session()->put('results', $results);
 
+        // Retourner la vue avec les résultats
         return view('forme.formulaire', compact('results'));
     }
 
-    public function index()
-    {
-        return view('forme.formulaire');
-    }
-
-
+    /**
+     * Exporte les résultats en format Word (DOCX).
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function export(Request $request)
     {
         // Récupérer les résultats de la session
@@ -65,6 +91,8 @@ class FormulaireController extends Controller
         // Créer un nouveau document Word
         $phpWord = new PhpWord();
         $section = $phpWord->addSection();
+
+        // Ajouter un titre au document
         $section->addText('Résultats du Calcul', ['bold' => true, 'size' => 16]);
 
         // Ajouter les résultats au document
@@ -75,12 +103,16 @@ class FormulaireController extends Controller
         $section->addText("Débit d'eau (litres/minute) : {$results['debit_eau_litres_minute']}");
         $section->addText("Période d'application (heures) : {$results['periode_application_heures']}");
         $section->addText("Période d'application (minutes) : {$results['periode_application_minutes']}");
+        $section->addText("Rinçage (eau) : {$results['rinçage_eau']} litres"); // Ajouté
+        $section->addText("Durée de rinçage : {$results['rinçage_duree']} minutes"); // Ajouté
+        $section->addText("Contrôle de la concentration : {$results['controle_concentration']} %"); // Ajouté
 
-        // Enregistrer le document
+        // Enregistrer le document temporairement
         $objWriter = IOFactory::createWriter($phpWord, 'Word2007');
-        $objWriter->save(storage_path('results.docx'));
+        $filePath = storage_path('results.docx');
+        $objWriter->save($filePath);
 
         // Télécharger le document
-        return response()->download(storage_path('results.docx'))->deleteFileAfterSend(true);
+        return response()->download($filePath)->deleteFileAfterSend(true);
     }
 }

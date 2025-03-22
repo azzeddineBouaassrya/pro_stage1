@@ -10,7 +10,7 @@
 <body>
     <div class="container">
         <h1>Modifier l'Utilisateur</h1>
-        <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
+        <form action="{{ route('users.update', $user->id) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="form-group">

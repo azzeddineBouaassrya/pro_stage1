@@ -21,6 +21,8 @@
     <div class="container">
         <h1>Gestion des Utilisateurs</h1>
         <a href="{{ route('formulaire') }}" class="btn btn-primary mb-3">Accéder au Formulaire de Calcul</a>
+        <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Ajouter</a>
+
 
         <table class="table">
             <thead>
@@ -37,9 +39,8 @@
                         <td>{{ $user->role }}</td>
                         <td>
                             <div class="btn-group">
-                                <a href="{{ route('admin.users.create') }}" class="btn btn-success">Ajouter</a>
-                                <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-warning">Modifier</a>
-                                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning">Modifier</a>
+                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger">Supprimer</button>
