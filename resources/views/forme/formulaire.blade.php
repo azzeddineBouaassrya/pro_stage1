@@ -26,7 +26,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="text-center mb-4">Formulaire de Calcul</h1>
+        <h1 class="text-center mb-4">ROPPORT TRAITEMENT</h1>
 
         <!-- Formulaire de calcul -->
         <form action="{{ route('formulaire.calculer') }}" method="POST">
