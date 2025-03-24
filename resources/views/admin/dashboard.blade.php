@@ -7,32 +7,67 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #f4f6f9;
+            font-family: 'Arial', sans-serif;
         }
         .dashboard-container {
             max-width: 800px;
             margin: 50px auto;
             background: white;
             padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
             text-align: center;
+            animation: fadeIn 0.8s ease-in-out;
         }
-        .dashboard-container h1 {
-            color: #007bff;
-            margin-bottom: 20px;
+        .header {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            font-size: 24px;
+            font-weight: bold;
         }
         .btn-primary {
-            padding: 10px 20px;
+            padding: 12px 30px;
             font-size: 18px;
-            border-radius: 5px;
+            border-radius: 8px;
+            background: #007bff;
+            border: none;
+            transition: 0.3s ease-in-out;
+            margin-top: 15px;
+        }
+        .btn-primary:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+        .logo {
+            max-width: 120px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .logo:hover {
+            transform: rotate(5deg) scale(1.1);
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="dashboard-container">
-            <h1>Tableau de Bord Administrateur</h1>
+            <div class="header">Tableau de Bord Administrateur</div>
+            <img src="{{ asset('cmgpcas.webp') }}" alt="Logo" class="logo">
+            <p class="lead">Bienvenue sur votre espace d'administration</p>
             <a href="{{ route('users.index') }}" class="btn btn-primary">Gérer les Utilisateurs</a>
         </div>
     </div>
