@@ -33,7 +33,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('formulaire')->group(function () {
         Route::get('/', [FormulaireController::class, 'index'])->name('formulaire');
         Route::post('/calculer', [FormulaireController::class, 'calculer'])->name('formulaire.calculer');
-        Route::get('/export', [FormulaireController::class, 'export'])->name('formulaire.export');
+        Route::get('/export', [FormulaireController::class, 'export'])->name('resulta.export');
     });
 
     /*

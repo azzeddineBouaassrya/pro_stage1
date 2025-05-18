@@ -69,7 +69,7 @@ class FormulaireController extends Controller
         $request->session()->put('results', $results);
 
         // Retourner la vue avec les résultats
-        return view('forme.formulaire', compact('results'));
+        return view('forme.resulta', compact('results'));
     }
 
     /**

@@ -112,57 +112,37 @@
 
         <h1>RAPPORT TRAITEMENT</h1>
 
-        <!-- Formulaire de calcul -->
-        <form action="{{ route('formulaire.calculer') }}" method="POST">
-            @csrf
-
-            <div class="form-group">
-                <label for="longueur">Longueur de ligne (m)</label>
-                <input type="number" step="0.01" class="form-control" id="longueur" name="longueur"
-                    value="{{ old('longueur') }}" required>
+        <!-- Affichage des résultats -->
+        @if (isset($results))
+            <div class="result">
+                <h2>Résultats</h2>
+                <p><strong>Surface :</strong> {{ number_format($results['surface'], 2) }} m²</p>
+                <p><strong>Quantité totale de produit (litres) :</strong>
+                    {{ number_format($results['quantite_totale_litres'], 2) }}</p>
+                <p><strong>Quantité totale de produit (kg) :</strong>
+                    {{ number_format($results['quantite_totale_kg'], 2) }}</p>
+                <p><strong>Quantité d'eau totale (litres) :</strong>
+                    {{ number_format($results['quantite_eau_totale_litres'], 2) }}</p>
+                <p><strong>Débit d'eau (litres/minute) :</strong>
+                    {{ number_format($results['debit_eau_litres_minute'], 2) }}</p>
+                <p><strong>Période d'application (heures) :</strong>
+                    {{ number_format($results['periode_application_heures'], 2) }}</p>
+                <p><strong>Période d'application (minutes) :</strong>
+                    {{ number_format($results['periode_application_minutes'], 2) }}</p>
+                <p><strong>Rinçage (eau) :</strong> {{ number_format($results['rinçage_eau'], 2) }} litres</p>
+                <p><strong>Durée de rinçage :</strong> {{ number_format($results['rinçage_duree'], 2) }} minutes</p>
+                <p><strong>Contrôle de la concentration :</strong>
+                    {{ number_format($results['controle_concentration'], 2) }} %</p>
             </div>
 
-            <div class="form-group">
-                <label for="largeur">Largeur de ligne (m)</label>
-                <input type="number" step="0.01" class="form-control" id="largeur" name="largeur"
-                    value="{{ old('largeur') }}" required>
+            <!-- Bouton d'exportation -->
+            <div class="text-center mt-3">
+                <a href="{{ route('resulta.export') }}" class="btn btn-success">
+                    <i class="bi bi-file-earmark-word"></i> Exporter en Word
+                </a>
             </div>
-
-            <div class="form-group">
-                <label for="nombre_lignes">Nombre de lignes</label>
-                <input type="number" class="form-control" id="nombre_lignes" name="nombre_lignes"
-                    value="{{ old('nombre_lignes') }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="quantite_produit_g">Quantité de produit (g/m²)</label>
-                <input type="number" step="0.01" class="form-control" id="quantite_produit_g"
-                    name="quantite_produit_g" value="{{ old('quantite_produit_g') }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="quantite_produit_cc">Quantité de produit (cc/m²)</label>
-                <input type="number" step="0.01" class="form-control" id="quantite_produit_cc"
-                    name="quantite_produit_cc" value="{{ old('quantite_produit_cc') }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="quantite_eau_litres_m2">Quantité d'eau (litres/m²)</label>
-                <input type="number" step="0.01" class="form-control" id="quantite_eau_litres_m2"
-                    name="quantite_eau_litres_m2" value="{{ old('quantite_eau_litres_m2') }}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="debit_eau_litres_heure">Débit d'eau (litres/heure)</label>
-                <input type="number" step="0.01" class="form-control" id="debit_eau_litres_heure"
-                    name="debit_eau_litres_heure" value="{{ old('debit_eau_litres_heure') }}" required>
-            </div>
-
-            <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary btn-custom">Calculer</button>
-                <button type="reset" class="btn btn-secondary btn-custom">Réinitialiser</button>
-            </div>
-        </form>
+        @endif
+    </div>
 
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
